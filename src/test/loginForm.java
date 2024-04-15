@@ -10,6 +10,7 @@ import config.dbConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import user.userDash;
 
 /**
  *
@@ -23,12 +24,22 @@ public class loginForm extends javax.swing.JFrame {
     public loginForm() {
         initComponents();
     }
+    
+    static String status;
+    static String type;
     public static boolean loginAcc(String username, String password){
         dbConnector connector = new dbConnector();
         try{
             String query = "SELECT * FROM u_tbl WHERE u_username = '" + username + "' AND u_password = '" + password + "'";
             ResultSet resultSet = connector.getData(query);
-            return resultSet.next();
+             if(resultSet.next()){
+             status = resultSet.getString("u_status");
+             type = resultSet.getString("u_type");    
+                 return true;
+             }else{
+                 return false;
+             }
+            
         }catch (SQLException ex) {
             return false;
         }
@@ -49,6 +60,7 @@ public class loginForm extends javax.swing.JFrame {
         user = new javax.swing.JTextField();
         pass = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,6 +83,13 @@ public class loginForm extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Register");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -88,7 +107,8 @@ public class loginForm extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(pass))))
                 .addContainerGap(136, Short.MAX_VALUE))
         );
@@ -104,7 +124,9 @@ public class loginForm extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap(126, Short.MAX_VALUE))
         );
 
@@ -113,12 +135,30 @@ public class loginForm extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
      
+        
+ 
         if(loginAcc(user.getText(),pass.getText())){
+            if(!status.equals("Active")){
+               JOptionPane.showMessageDialog(null,"In-active Account, Contact the Admin");
+        }else{
           JOptionPane.showMessageDialog(null,"Log-in Successfully");
-             adminDash ads = new adminDash();
+          
+          if(type.equals("Admin")){
+                adminDash ads = new adminDash();
           ads.setVisible(true);
           this.dispose();
-      }else{
+              
+          }else if(type.equals("User")){
+              userDash ads = new userDash();
+          ads.setVisible(true);
+          this.dispose();
+              
+          }else{
+              JOptionPane.showMessageDialog(null,"No Account type found, Contact the Admin");
+          }
+            
+            }
+        }else{
            JOptionPane.showMessageDialog(null,"Log-in Failed");
       }
         
@@ -128,6 +168,12 @@ public class loginForm extends javax.swing.JFrame {
     private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
      
     }//GEN-LAST:event_passActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+      signup su= new signup();
+                su.setVisible(true);
+                this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -166,6 +212,7 @@ public class loginForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JTextField pass;
