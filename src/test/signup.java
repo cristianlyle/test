@@ -6,6 +6,8 @@
 package test;
 
 import config.dbConnector;
+import config.hashing;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -69,18 +71,19 @@ public class signup extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         us = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        ps = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         ut = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        ps = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(102, 102, 0));
 
         jLabel4.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("First name :");
 
         fn.addActionListener(new java.awt.event.ActionListener() {
@@ -96,6 +99,7 @@ public class signup extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText(" Last name :");
 
         em.addActionListener(new java.awt.event.ActionListener() {
@@ -105,6 +109,7 @@ public class signup extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Email :");
 
         us.addActionListener(new java.awt.event.ActionListener() {
@@ -114,15 +119,11 @@ public class signup extends javax.swing.JFrame {
         });
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Username :");
 
-        ps.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                psActionPerformed(evt);
-            }
-        });
-
         jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Password :");
 
         ut.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "User" }));
@@ -133,6 +134,7 @@ public class signup extends javax.swing.JFrame {
         });
 
         jLabel6.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("User Type");
         jLabel6.setToolTipText("");
 
@@ -170,17 +172,18 @@ public class signup extends javax.swing.JFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fn)
-                            .addComponent(ps)
                             .addComponent(em)
                             .addComponent(ln)
-                            .addComponent(ut, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ut, 0, 206, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jButton2)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1)
-                                .addGap(20, 20, 20)))))
+                                .addGap(20, 20, 20))
+                            .addComponent(ps))))
                 .addGap(81, 81, 81))
         );
         jPanel1Layout.setVerticalGroup(
@@ -193,8 +196,8 @@ public class signup extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ln, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(em, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -207,7 +210,7 @@ public class signup extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ps, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ps, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -234,6 +237,7 @@ public class signup extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void fnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fnActionPerformed
@@ -243,10 +247,6 @@ public class signup extends javax.swing.JFrame {
     private void emActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_emActionPerformed
-
-    private void psActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_psActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_psActionPerformed
 
     private void usActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usActionPerformed
         // TODO add your handling code here:
@@ -274,13 +274,21 @@ public class signup extends javax.swing.JFrame {
             
             dbConnector dbc = new dbConnector();
            
-            if(dbc.insertData("INSERT INTO u_tbl (u_fname, u_lname, u_email, u_username, u_password, u_type,u_status) VALUES ('"+fn.getText()+"', '"+ln.getText()+"', '"+em.getText()+"', '"+us.getText()+"', '"+ps.getText()+"', '"+ut.getSelectedItem()+"','Pending')")){                                        
+            try{
+                String pass = hashing.hashPassword(ps.getText());
+            
+            if(dbc.insertData("INSERT INTO u_tbl (u_fname, u_lname, u_email, u_username, u_password, u_type,u_status)"
+                    + " VALUES ('"+fn.getText()+"', '"+ln.getText()+"', '"+em.getText()+"', '"+us.getText()+"', "
+                            + "'"+pass+"', '"+ut.getSelectedItem()+"','Pending')")){                                        
                 JOptionPane.showMessageDialog(null, "Inserted Successfully!");
                 loginForm lg= new loginForm();
                 lg.setVisible(true);
                 this.dispose();
             }else{
                 JOptionPane.showMessageDialog(null, "Connection Error!");
+            }
+            }catch(NoSuchAlgorithmException ex){
+                System.out.println(""+ex);
             }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -346,7 +354,7 @@ public class signup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField ln;
-    private javax.swing.JTextField ps;
+    private javax.swing.JPasswordField ps;
     private javax.swing.JTextField us;
     private javax.swing.JComboBox<String> ut;
     // End of variables declaration//GEN-END:variables

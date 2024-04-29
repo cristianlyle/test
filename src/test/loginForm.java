@@ -6,7 +6,10 @@
 package test;
 
 import admin.adminDash;
+import config.Session;
 import config.dbConnector;
+import config.hashing;
+import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -27,24 +30,45 @@ public class loginForm extends javax.swing.JFrame {
     
     static String status;
     static String type;
+    
     public static boolean loginAcc(String username, String password){
         dbConnector connector = new dbConnector();
+        
         try{
-            String query = "SELECT * FROM u_tbl WHERE u_username = '" + username + "' AND u_password = '" + password + "'";
+            String query = "SELECT * FROM u_tbl WHERE u_username = '" + username + "'";
             ResultSet resultSet = connector.getData(query);
              if(resultSet.next()){
+                   String hashedPass = resultSet.getNString("u_password");
+                   String rehashedPass = hashing.hashPassword(password);
+                   
+                   System.out.println(""+hashedPass);
+                   System.out.println(""+rehashedPass);
+             if(hashedPass.equals(rehashedPass)){
              status = resultSet.getString("u_status");
-             type = resultSet.getString("u_type");    
-                 return true;
+             type = resultSet.getString("u_type");   
+            Session sess = Session.getInstance();
+            sess.setUid(resultSet.getInt("u_id"));    
+            sess.setFname(resultSet.getString("u_fname"));
+            sess.setLname(resultSet.getString("u_lname"));
+            sess.setEmail(resultSet.getString("u_email"));
+            sess.setUsername(resultSet.getString("u_username"));
+            sess.setType(resultSet.getString("u_type"));
+            sess.setStatus(resultSet.getString("u_status"));
+            return true;
+            
+             }else{
+                 return false;
+             }
              }else{
                  return false;
              }
             
-        }catch (SQLException ex) {
+        }catch(SQLException |NoSuchAlgorithmException ex) {
             return false;
         }
-
+        
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,9 +82,9 @@ public class loginForm extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         user = new javax.swing.JTextField();
-        pass = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        pass = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,12 +93,6 @@ public class loginForm extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText(" password :");
-
-        pass.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passActionPerformed(evt);
-            }
-        });
 
         jButton1.setText("Log-in");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -94,8 +112,8 @@ public class loginForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(90, 90, 90)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(160, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -110,33 +128,32 @@ public class loginForm extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(pass))))
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addGap(141, 141, 141))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(79, 79, 79)
+                .addGap(99, 99, 99)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(139, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     
         
- 
         if(loginAcc(user.getText(),pass.getText())){
             if(!status.equals("Active")){
                JOptionPane.showMessageDialog(null,"In-active Account, Contact the Admin");
@@ -164,10 +181,6 @@ public class loginForm extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
-     
-    }//GEN-LAST:event_passActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
       signup su= new signup();
@@ -215,7 +228,7 @@ public class loginForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField pass;
+    public javax.swing.JPasswordField pass;
     private javax.swing.JTextField user;
     // End of variables declaration//GEN-END:variables
 }
